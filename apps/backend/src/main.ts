@@ -1,4 +1,7 @@
 import fastify from 'fastify';
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
 
 const port = process.env.PORT ? Number(process.env.PORT) : 3000;
 
@@ -8,12 +11,17 @@ app.get('/', async (req, res) => {
   return { message: 'Hello API' };
 });
 
+app.get('/posts', async (req, res) => {
+  const posts = await prisma.post.findMany();
+  return { posts };
+});
+
 const start = async () => {
   try {
-    await app.listen({ port });
-    console.log(`[ ready ] http://localhost:${port}`);
+    const address = await app.listen({ port, host: '0.0.0.0' });
+    console.log(`[ ready ] Server listening on ${address}`);
   } catch (err) {
-    // Errors are logged here
+    // Errors are logged herep
     process.exit(1);
   }
 };
