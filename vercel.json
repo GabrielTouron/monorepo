@@ -2,5 +2,11 @@
   "framework": "nextjs",
   "buildCommand": "npx nx build client --prod",
   "outputDirectory": "dist/apps/client/.next",
-  "ignoreCommand": "npx nx-ignore client"
+  "ignoreCommand": "npx nx-ignore client",
+  "git": {
+    "deploymentEnabled": {
+      "main": false
+    }
+  },
+  "regions": ["cdg1"]
 }
