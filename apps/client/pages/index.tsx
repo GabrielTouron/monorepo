@@ -1,6 +1,16 @@
 import styles from './index.module.css';
 
-export function Index() {
+// I want to call backend API from the backendAPI
+
+
+export async function getServerSideProps() {
+  const res = await fetch(`http://localhost:3000/`)
+  const data = await res.json()
+
+  return { props: { data } }
+}
+
+export function Index({ data }) {
   /*
    * Replace the elements below with your own.
    *
@@ -14,6 +24,7 @@ export function Index() {
             <h1>
               <span> Hello there, </span>
               Welcome client 👋
+              {data.message}
             </h1>
           </div>
 
