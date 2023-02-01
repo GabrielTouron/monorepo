@@ -1,16 +1,24 @@
+import { Post } from '@prisma/client';
 import styles from './index.module.css';
 
 // I want to call backend API from the backendAPI
 
+type Props = {
+    data: { message: string }
+    dbData: Post[]
+}
 
 export async function getServerSideProps() {
   const res = await fetch(`http://localhost:3000/`)
-  const data = await res.json()
+  const dbRes = await fetch(`http://localhost:3000/posts`)
 
-  return { props: { data } }
+  const data = await res.json()
+  const dbData = await dbRes.json()
+
+  return { props: { data, dbData } }
 }
 
-export function Index({ data }) {
+export function Index({ data, dbData }: Props) {
   /*
    * Replace the elements below with your own.
    *
@@ -24,8 +32,9 @@ export function Index({ data }) {
             <h1>
               <span> Hello there, </span>
               Welcome client 👋
-              {data.message}
             </h1>
+            <strong> fastify ? {data.message ? "ready !" : "nope"} </strong>
+            <strong> prisma ? {dbData ? "ready !" : "nope"} </strong>
           </div>
 
           <div id="hero" className="rounded">
