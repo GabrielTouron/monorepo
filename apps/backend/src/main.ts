@@ -7,11 +7,11 @@ const port = process.env.PORT ? Number(process.env.PORT) : 3000;
 
 const app = fastify();
 
-app.get('/', async (req, res) => {
+app.get('/', async () => {
   return { message: 'Hello API' };
 });
 
-app.get('/posts', async (req, res) => {
+app.get('/posts', async () => {
   const posts = await prisma.post.findMany();
   return { posts };
 });
