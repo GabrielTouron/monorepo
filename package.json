@@ -13,7 +13,14 @@
     "migrate:dev": "prisma migrate dev",
     "db:pull": "prisma db pull",
     "db:generate": "prisma generate",
-    "deps:graph": "nx graph"
+    "affected:graph": "nx affected:graph",
+    "affected:apps": "nx affected:apps",
+    "affected:lint": "nx affected:lint",
+    "affected:test": "nx affected:test",
+    "lint": "nx workspace-lint && nx run-many --target=lint --all --parallel",
+    "deps:graph": "nx graph",
+    "format": "nx format:write",
+    "format:check": "nx format:check"
   },
   "private": true,
   "dependencies": {
