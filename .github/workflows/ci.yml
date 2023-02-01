@@ -8,6 +8,10 @@ on:
 jobs:
   main:
     runs-on: ubuntu-latest
+    name: nx-build
+    permissions:
+      contents: 'read'
+      actions: 'read'
     steps:
       - uses: actions/checkout@v2
         with:
