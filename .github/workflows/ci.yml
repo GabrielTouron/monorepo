@@ -26,28 +26,39 @@ jobs:
           workload_identity_provider: 'projects/103668507909/locations/global/workloadIdentityPools/github'
           service_account: 'github-actions@advance-proton-376516.iam.gserviceaccount.com'
 
-      - uses: 'docker/login-action@v2'
-        with:
-          registry: 'europe-west1-docker.pkg.dev'
-          username: 'oauth2accesstoken'
-          password: '${{ steps.auth.outputs.access_token }}'
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
 
-          # This example runs "docker login" directly to Artifact Registry.
-      # - run: |-
-      #     echo '${{ steps.auth.outputs.access_token }}' | docker login -u oauth2accesstoken --password-stdin https://europe-west1-docker.pkg.dev
+      - name: Authorize Docker push
+        run: gcloud auth configure-docker europe-west1-docker-pkg.dev
+
+      - name: Build and Push Container
+        run: |-
+          docker pull us-docker.pkg.dev/google-samples/containers/gke/hello-app:1.0
+          docker tag us-docker.pkg.dev/google-samples/containers/gke/hello-app:1.0 \
+          europe-west1-docker.pkg.dev/advance-proton-376516/my-repo/quickstart-image:tag1
+          docker push europe-west1-docker.pkg.dev/advance-proton-376516/my-repo/quickstart-image:tag1
+
+      # - name: Deploy to Cloud Run
+      #   run: |-
+      #     gcloud run deploy ${{ env.SERVICE }} \
+      #     --region ${{ env.REGION }} \
+      #     --image gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{  github.sha }} \
+      #     --platform "managed" \
+      #     --quiet      
       #
-      - name: 'nx'
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-
-      - uses: nrwl/nx-set-shas@v3
-      - run: npm ci
-
-      - run: npx nx workspace-lint
-      # - run: npx nx format:check
-      - run: npx nx affected --target=lint --parallel=3
-      # - run: npx nx affected --target=test --parallel=3 --configuration=ci
-      - run: npx nx affected --target=build --parallel=3
-
+      # - name: 'nx'
+      #   uses: actions/setup-node@v3
+      #   with:
+      #     node-version: 18
+      #
+      # - uses: nrwl/nx-set-shas@v3
+      # - run: npm ci
+      #
+      # - run: npx nx workspace-lint
+      # # - run: npx nx format:check
+      # - run: npx nx affected --target=lint --parallel=3
+      # # - run: npx nx affected --target=test --parallel=3 --configuration=ci
+      # - run: npx nx affected --target=build --parallel=3
+      #
     
