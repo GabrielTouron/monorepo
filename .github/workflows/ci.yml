@@ -1,3 +1,5 @@
+# https://github.com/google-github-actions/example-workflows/blob/main/workflows/deploy-cloudrun/cloudrun-docker.yml
+
 name: CI
 on:
   push:
@@ -18,6 +20,20 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: 'nx'
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - uses: nrwl/nx-set-shas@v3
+      - run: npm ci
+            
+      - run: npx nx workspace-lint
+      - run: npx nx format:check
+      - run: npx nx affected --target=lint --parallel=3
+      - run: npx nx affected --target=test --parallel=3 --configuration=ci
+      - run: npx nx affected --target=build --parallel=3
+            
       - id: 'auth'
         name: 'Authenticate to Google Cloud'
         uses: 'google-github-actions/auth@v1'
@@ -26,7 +42,6 @@ jobs:
           workload_identity_provider: 'projects/103668507909/locations/global/workloadIdentityPools/github/providers/github-github'
           service_account: 'github-actions@advance-proton-376516.iam.gserviceaccount.com'
 
-      # Authenticate Docker to Google Cloud Artifact Registry
       - name: Docker Auth
         id: docker-auth
         uses: 'docker/login-action@v1'
@@ -35,19 +50,17 @@ jobs:
           password: '${{ steps.auth.outputs.access_token }}'
           registry: 'europe-west1-docker.pkg.dev'
 
-      # - name: Set up Cloud SDK
-      #   uses: google-github-actions/setup-gcloud@v1
-      #
-      # - name: Authorize Docker push
-      #   run: gcloud auth configure-docker europe-west1-docker.pkg.dev
-
       - name: Build and Push Container
         run: |-
-          docker pull us-docker.pkg.dev/google-samples/containers/gke/hello-app:1.0
-          docker tag us-docker.pkg.dev/google-samples/containers/gke/hello-app:1.0 \
-          europe-west1-docker.pkg.dev/advance-proton-376516/my-repo/quickstart-image:tag1
-          docker push europe-west1-docker.pkg.dev/advance-proton-376516/my-repo/quickstart-image:tag1
+          docker build -f ./apps/backend/Dockerfile . -t "europe-west1-docker.pkg.dev/advance-proton-376516/my-repo/backend:${{ github.sha }}"
+          docker push "europe-west1-docker.pkg.dev/advance-proton-376516/my-repo/backend:${{ github.sha }}"
 
+
+         # docker pull us-docker.pkg.dev/google-samples/containers/gke/hello-app:1.0
+         #  docker tag us-docker.pkg.dev/google-samples/containers/gke/hello-app:1.0 \
+         #  europe-west1-docker.pkg.dev/advance-proton-376516/my-repo/quickstart-image:tag1
+         #  docker push europe-west1-docker.pkg.dev/advance-proton-376516/my-repo/quickstart-image:tag1
+         #
       # - name: Deploy to Cloud Run
       #   run: |-
       #     gcloud run deploy ${{ env.SERVICE }} \
@@ -55,19 +68,5 @@ jobs:
       #     --image gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{  github.sha }} \
       #     --platform "managed" \
       #     --quiet      
-      #
-      # - name: 'nx'
-      #   uses: actions/setup-node@v3
-      #   with:
-      #     node-version: 18
-      #
-      # - uses: nrwl/nx-set-shas@v3
-      # - run: npm ci
-      #
-      # - run: npx nx workspace-lint
-      # # - run: npx nx format:check
-      # - run: npx nx affected --target=lint --parallel=3
-      # # - run: npx nx affected --target=test --parallel=3 --configuration=ci
-      # - run: npx nx affected --target=build --parallel=3
       #
     
