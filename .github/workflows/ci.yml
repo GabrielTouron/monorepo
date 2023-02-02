@@ -23,7 +23,7 @@ jobs:
         uses: 'google-github-actions/auth@v1'
         with:
           token_format: 'access_token'
-          workload_identity_provider: 'projects/103668507909/locations/global/workloadIdentityPools/github'
+          workload_identity_provider: 'projects/103668507909/locations/global/workloadIdentityPools/github/providers/github-github'
           service_account: 'github-actions@advance-proton-376516.iam.gserviceaccount.com'
 
       - name: Set up Cloud SDK

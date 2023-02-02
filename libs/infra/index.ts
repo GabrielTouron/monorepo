@@ -41,7 +41,6 @@ new gcp.iam.WorkloadIdentityPoolProvider('provider', {
   attributeMapping: {
     'google.subject': 'assertion.sub',
     'attribute.actor': 'assertion.actor',
-    'attribute.aud': 'assertion.aud',
     'attribute.repository': 'assertion.repository',
   },
   oidc: {
