@@ -13,8 +13,16 @@ jobs:
       contents: 'read'
       actions: 'read'
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
+      - id: 'auth'
+        name: 'Authenticate to Google Cloud'
+        uses: 'google-github-actions/auth@v1'
         with:
+          workload_identity_provider: 'projects/103668507909/locations/global/workloadIdentityPools/github'
+          service_account: 'github-actions@advance-proton-376516.iam.gserviceaccount.com'
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
           fetch-depth: 0
       - uses: nrwl/nx-set-shas@v3
       - run: npm ci
@@ -23,3 +31,5 @@ jobs:
       - run: npx nx affected --target=lint --parallel=3
       # - run: npx nx affected --target=test --parallel=3 --configuration=ci
       - run: npx nx affected --target=build --parallel=3
+
+    
