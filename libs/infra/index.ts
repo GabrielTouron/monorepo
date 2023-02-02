@@ -77,6 +77,14 @@ new gcp.serviceaccount.IAMBinding('sa-binding', {
   members: [getIdentityPoolMember],
 });
 
+// I want to give editor role to the service account
+
+new gcp.projects.IAMMember('sa-editor', {
+  project,
+  role: 'roles/editor',
+  member: pulumi.interpolate`serviceAccount:${sa.email}`,
+});
+
 // Sa need to be able to push images to the registry
 new gcp.artifactregistry.RepositoryIamMember('sa', {
   location: 'europe-west1',
