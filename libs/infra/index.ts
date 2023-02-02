@@ -72,6 +72,12 @@ const sa = new gcp.serviceaccount.Account('sa', {
   displayName: 'Github Actions',
 });
 
+new gcp.serviceaccount.IAMBinding('sa-binding', {
+  serviceAccountId: sa.name,
+  role: 'roles/iam.workloadIdentityUser',
+  members: [getIdentityPoolMember],
+});
+
 // Sa need to be able to push images to the registry
 new gcp.artifactregistry.RepositoryIamMember('sa', {
   location: 'europe-west1',
