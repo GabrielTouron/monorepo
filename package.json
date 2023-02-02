@@ -7,7 +7,7 @@
     "start:client": "nx serve client",
     "build:client": "nx build client --prod",
     "start:backend": "nx serve backend",
-    "build:backend": "nx build backend --prod",
+    "build:backend": "nx docker-build backend --prod",
     "start:dev": "nx run-many --parallel --target=serve --projects=client,backend",
     "docker:backend": "nx run build:backend && docker build -f ./apps/backend/Dockerfile . -t fastify",
     "migrate:dev": "prisma migrate dev",
@@ -20,13 +20,16 @@
     "lint": "nx workspace-lint && nx run-many --target=lint --all --parallel",
     "deps:graph": "nx graph",
     "format": "nx format:write",
-    "format:check": "nx format:check"
+    "format:check": "nx format:check",
+    "infra:up": "nx run infra:pulumi"
   },
   "private": true,
   "dependencies": {
     "@nrwl/cli": "^15.6.3",
     "@nrwl/next": "15.6.3",
     "@prisma/client": "^4.9.0",
+    "@pulumi/gcp": "^6.48.0",
+    "@pulumi/pulumi": "^3.53.1",
     "axios": "^1.0.0",
     "next": "13.1.1",
     "react": "18.2.0",
