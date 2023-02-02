@@ -25,6 +25,16 @@ jobs:
           workload_identity_provider: 'projects/103668507909/locations/global/workloadIdentityPools/github'
           service_account: 'github-actions@advance-proton-376516.iam.gserviceaccount.com'
 
+      - uses: 'docker/login-action@v1'
+        with:
+          registry: 'europe-west1-docker.pkg.dev'
+          username: 'oauth2accesstoken'
+          password: '${{ steps.auth.outputs.access_token }}'
+
+          # This example runs "docker login" directly to Artifact Registry.
+      - run: |-
+          echo '${{ steps.auth.outputs.access_token }}' | docker login -u oauth2accesstoken --password-stdin https://europe-west1-docker.pkg.dev
+
       - name: 'nx'
         uses: actions/setup-node@v3
         with:
