@@ -14,12 +14,13 @@ jobs:
     permissions:
       contents: 'read'
       actions: 'read'
+      id-token: 'write'
     steps:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
-      - name: 'nx'
+      - name: 'Setup node'
         uses: actions/setup-node@v3
         with:
           node-version: 18
@@ -33,25 +34,6 @@ jobs:
       - run: npx nx affected --target=test --parallel=3 --configuration=ci
       - run: npx nx affected --target=build --parallel=3
       - run: npx nx affected --target=docker-build --tag=europe-west1-docker.pkg.dev/advance-proton-376516/my-repo/backend:${{ github.sha }}
-
-  deploy:
-    runs-on: ubuntu-latest
-    name: Deploy
-    needs:
-      - build
-    permissions:
-      contents: 'read'
-      actions: 'read'
-      id-token: 'write'
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-
-      - name: 'Setup node'
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
 
       - id: 'auth'
         name: 'Authenticate to Google Cloud'
