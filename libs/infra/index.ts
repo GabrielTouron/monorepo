@@ -23,6 +23,12 @@ const enableWorkloadIdentity = new gcp.projects.Service('iam-cred', {
   disableOnDestroy: false,
 });
 
+// Enable cloud run api
+new gcp.projects.Service('cloudrun', {
+  service: 'run.googleapis.com',
+  disableOnDestroy: false,
+});
+
 const enableWorkloadIdentity2 = new gcp.projects.Service('iam', {
   service: 'iam.googleapis.com',
   disableOnDestroy: false,
