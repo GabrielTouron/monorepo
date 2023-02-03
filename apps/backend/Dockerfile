@@ -6,6 +6,7 @@ RUN addgroup --system backend && \
           adduser --system -G backend backend
 
 COPY ./dist/apps/backend dist
+COPY ./apps/backend/prisma dist/
 
 RUN chown -R backend:backend .
 

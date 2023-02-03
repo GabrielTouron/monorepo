@@ -13,7 +13,7 @@ app.get('/', async () => {
 
 app.get('/posts', async () => {
   const posts = await prisma.post.findMany();
-  console.log('new stuff11');
+  console.log('new stuff12');
   return { posts };
 });
 

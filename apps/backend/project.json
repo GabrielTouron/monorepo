@@ -1,7 +1,7 @@
 {
   "name": "backend",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/backend",
+  "sourceRoot": "apps/backend/src",
   "projectType": "application",
   "targets": {
     "build": {
@@ -12,10 +12,7 @@
         "format": ["cjs"],
         "main": "apps/backend/src/main.ts",
         "tsConfig": "apps/backend/tsconfig.app.json",
-        "assets": [
-          "apps/backend/src/",
-          "apps/backend/prisma",
-        ]
+        "assets": ["apps/backend/src/assets"]
       }
     },
     "serve": {
