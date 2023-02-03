@@ -8,9 +8,9 @@ on:
   pull_request:
 
 jobs:
-  main:
+  build:
     runs-on: ubuntu-latest
-    name: nx-build
+    name: Nx build 
     permissions:
       contents: 'read'
       actions: 'read'
@@ -33,7 +33,22 @@ jobs:
       - run: npx nx affected --target=lint --parallel=3
       - run: npx nx affected --target=test --parallel=3 --configuration=ci
       - run: npx nx affected --target=build --parallel=3
-            
+      - run: npx nx affected --target=docker-build --tag="europe-west1-docker.pkg.dev/advance-proton-376516/my-repo/backend:${{ github.sha }}
+
+  deploy:
+    if: steps.build.outputs.affected-targets == ;  
+    runs-on: ubuntu-latest
+    name: Deploy
+    needs:
+      - build
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: 'nx'
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
       - id: 'auth'
         name: 'Authenticate to Google Cloud'
         uses: 'google-github-actions/auth@v1'
@@ -51,22 +66,14 @@ jobs:
           registry: 'europe-west1-docker.pkg.dev'
 
       - name: Build and Push Container
+        run: docker push "europe-west1-docker.pkg.dev/advance-proton-376516/my-repo/backend:${{ github.sha }}"
+
+      - name: Deploy to Cloud Run
         run: |-
-          docker build -f ./apps/backend/Dockerfile . -t "europe-west1-docker.pkg.dev/advance-proton-376516/my-repo/backend:${{ github.sha }}"
-          docker push "europe-west1-docker.pkg.dev/advance-proton-376516/my-repo/backend:${{ github.sha }}"
+          gcloud run deploy backend \
+          --region europe-west1 \
+          --image europe-west1-docker.pkg.dev/advance-proton-376516/my-repo/backend:${{ github.sha }}
+          --platform "managed" \
+          --quiet      
 
 
-         # docker pull us-docker.pkg.dev/google-samples/containers/gke/hello-app:1.0
-         #  docker tag us-docker.pkg.dev/google-samples/containers/gke/hello-app:1.0 \
-         #  europe-west1-docker.pkg.dev/advance-proton-376516/my-repo/quickstart-image:tag1
-         #  docker push europe-west1-docker.pkg.dev/advance-proton-376516/my-repo/quickstart-image:tag1
-         #
-      # - name: Deploy to Cloud Run
-      #   run: |-
-      #     gcloud run deploy ${{ env.SERVICE }} \
-      #     --region ${{ env.REGION }} \
-      #     --image gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{  github.sha }} \
-      #     --platform "managed" \
-      #     --quiet      
-      #
-    
