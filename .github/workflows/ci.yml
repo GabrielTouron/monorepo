@@ -60,6 +60,7 @@ jobs:
           --region europe-west1 \
           --image europe-west1-docker.pkg.dev/advance-proton-376516/my-repo/backend:${{ github.sha }}
           --platform "managed" \
+          --allow-unauthenticated \
           --quiet      
 
 
