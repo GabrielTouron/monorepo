@@ -13,8 +13,8 @@
         "main": "apps/backend/src/main.ts",
         "tsConfig": "apps/backend/tsconfig.app.json",
         "assets": [
-          "apps/backend/src/assets",
-          "apps/backend/schema.prisma"
+          "apps/backend/src/",
+          "apps/backend/prisma",
         ]
       }
     },
