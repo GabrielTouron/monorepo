@@ -2,7 +2,7 @@
 
 **Monorepo pour le OBP**
 
-Un template avec les outils nécessaires paur repondre aux poblématiques d'une 3tiers apps, automatisée.
+Un template avec les outils nécessaires paur repondre aux poblématiques d'une 3tiers app, automatisée.
 
 ## Evolution
 
@@ -33,8 +33,8 @@ J'ai choisi des solutions très populaires, le monorepo a été généré par [N
 
 - [X] La pipeline peut déployer un service sur Cloud Run
 
-- [] La pipeline doit déclencher des commandes spécifiques uniquement dans les projets modifiés
+- [ ] La pipeline doit déclencher des commandes spécifiques uniquement dans les projets modifiés
 
-- [] Installation de Cloud SQL
+- [ ] Installation de Cloud SQL
 
-- [] Coordination du déploiement du backend et du frontend
+- [ ] Coordination du déploiement du backend et du frontend
