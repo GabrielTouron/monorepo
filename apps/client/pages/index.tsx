@@ -31,7 +31,7 @@ export function Index({ data, dbData }: Props) {
           <div id="welcome">
             <h1>
               <span> Hello there, </span>
-              Welcome client 👋
+              Welcome client 1👋
             </h1>
             <strong> fastify ? {data.message ? "ready !" : "nope"} </strong>
             <strong> prisma ? {dbData ? "ready !" : "nope"} </strong>
