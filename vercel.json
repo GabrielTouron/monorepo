@@ -4,8 +4,10 @@
   "outputDirectory": "dist/apps/client/.next",
   "ignoreCommand": "npx nx-ignore client",
   "git": {
+    "url": "https://github.com/GabrielTouron/monorepo.git",
+    "branch": "main",
     "deploymentEnabled": {
-      "main": false
+      "main": true 
     }
   },
   "regions": ["cdg1"]

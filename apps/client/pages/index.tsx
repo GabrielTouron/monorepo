@@ -9,8 +9,9 @@ export type Props = {
 }
 
 export async function getServerSideProps() {
-  const res = await fetch(`http://localhost:3000/`)
-  const dbRes = await fetch(`http://localhost:3000/posts`)
+  const path = 'https://backend-aj3s6tilta-ew.a.run.app/'
+  const res = await fetch(`${path}`)
+  const dbRes = await fetch(`${path}/posts`)
 
   const data = await res.json()
   const dbData = await dbRes.json()
