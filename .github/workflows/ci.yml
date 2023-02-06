@@ -11,6 +11,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     name: build 
+    outputs:
+      affected-project: ${{ steps.affected.outputs.affected_project }}
     permissions:
       contents: 'read'
       actions: 'read'
@@ -33,10 +35,9 @@ jobs:
       - run: npx nx affected --target=lint --parallel=3
       - run: npx nx affected --target=test --parallel=3i --configuration=ci
       - run: npx nx affected --target=build --type=apps --parallel=3
-
-      - run: echo $(npx nx print-affected --target=docker-build --select=projects --exclude=client)
       
-      - name: Check if dockerizable backend is affected
+      - id: affected
+        name: Check if dockerizable backend is affected
         run: echo affected_project=$(npx nx print-affected --target=docker-build --select=projects --exclude=client) >> $GITHUB_OUTPUT  
 
   test:
