@@ -36,7 +36,7 @@ jobs:
       - run: npx nx affected --target=docker-build --tag=europe-west1-docker.pkg.dev/advance-proton-376516/my-repo/backend:${{ github.sha }}
       
       - name: Check if dockerizable backend is affected
-        run: "echo \"Affected Project: $(npx nx print-affected --target=docker-build --select=projects --exclude=client)\""
+        run: echo "affected-project=npx nx print-affected --target=docker-build --select=projects --exclude=client)" >> $GITHUB_OUTPUT  
         id: affected-project
         env:
           AFFECTED_PROJECT: $(npx nx print-affected --target=docker-build --select=projects --exclude=client)
@@ -45,7 +45,7 @@ jobs:
     runs-on: ubuntu-latest
     name: deploy
     needs: build
-    if: steps.env.AFFECTED_PROJECT == "backend"
+    if: ${{needs.build.outputs.env.affected-project = "backend" }}
     permissions:
       contents: 'read'
       actions: 'read'
