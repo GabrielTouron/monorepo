@@ -34,7 +34,7 @@ jobs:
       - run: npx nx affected --target=test --parallel=3i --configuration=ci
       - run: npx nx affected --target=build --type=apps --parallel=3
 
-      - run: echo "affected-project=npx nx print-affected --target=docker-build --select=projects --exclude=client"
+      - run: echo "npx nx print-affected --target=docker-build --select=projects --exclude=client"
       
       - name: Check if dockerizable backend is affected
         run: echo "affected_project=npx nx print-affected --target=docker-build --select=projects --exclude=client" >> $GITHUB_OUTPUT  
@@ -44,7 +44,7 @@ jobs:
     runs-on: ubuntu-latest
     name: deploy
     needs: build
-    if: ${{needs.build.outputs.affected-project == 'backend' }}
+    if: ${{needs.build.outputs.affected_project == 'backend' }}
     permissions:
       contents: 'read'
       actions: 'read'
