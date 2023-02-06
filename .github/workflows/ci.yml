@@ -38,14 +38,12 @@ jobs:
       - name: Check if dockerizable backend is affected
         run: echo "affected-project=npx nx print-affected --target=docker-build --select=projects --exclude=client)" >> $GITHUB_OUTPUT  
         id: affected-project
-        env:
-          AFFECTED_PROJECT: $(npx nx print-affected --target=docker-build --select=projects --exclude=client)
 
   deploy:
     runs-on: ubuntu-latest
     name: deploy
     needs: build
-    if: ${{needs.build.outputs.env.affected-project = "backend" }}
+    if: ${{needs.build.outputs.env.affected-project == "backend" }}
     permissions:
       contents: 'read'
       actions: 'read'
