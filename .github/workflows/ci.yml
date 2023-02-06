@@ -59,7 +59,8 @@ jobs:
           gcloud run deploy backend \
           --region europe-west1 \
           --image europe-west1-docker.pkg.dev/advance-proton-376516/my-repo/backend:${{ github.sha }}
-          --platform "managed" \
+          --platform=managed \
+          --max-instances=1 \
           --allow-unauthenticated \
           --quiet      
 
