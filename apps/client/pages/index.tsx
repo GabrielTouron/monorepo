@@ -4,8 +4,8 @@ import styles from './index.module.css';
 // I want to call backend API from the backendAPI
 
 type Props = {
-    data: { message: string }
-    dbData: Post[]
+  data: { message: string }
+  dbData: Post[]
 }
 
 export async function getServerSideProps() {
@@ -15,6 +15,7 @@ export async function getServerSideProps() {
   const data = await res.json()
   const dbData = await dbRes.json()
 
+  const tata = "tata"
   return { props: { data, dbData } }
 }
 
@@ -35,6 +36,7 @@ export function Index({ data, dbData }: Props) {
             </h1>
             <strong> fastify ? {data.message ? "ready !" : "nope"} </strong>
             <strong> prisma ? {dbData ? "ready !" : "nope"} </strong>
+
           </div>
 
           <div id="hero" className="rounded">

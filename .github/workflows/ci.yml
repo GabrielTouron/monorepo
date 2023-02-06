@@ -34,7 +34,38 @@ jobs:
       - run: npx nx affected --target=test --parallel=3 --configuration=ci
       - run: npx nx affected --target=build --parallel=3
       - run: npx nx affected --target=docker-build --tag=europe-west1-docker.pkg.dev/advance-proton-376516/my-repo/backend:${{ github.sha }}
+      
+      - name: Check if dockerizable backend is affected
+        run: "echo \"Affected Project: $(npx nx print-affected --target=docker-build --select=projects --exclude=client)\""
+        id: affected-project
+        env:
+          AFFECTED_PROJECT: $(npx nx print-affected --target=docker-build --select=projects --exclude=client)
 
+  deploy:
+    runs-on: ubuntu-latest
+    name: deploy
+    needs: build
+    if: env.AFFECTED_PROJECT == "backend"
+    permissions:
+      contents: 'read'
+      actions: 'read'
+      id-token: 'write'
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: 'Setup node'
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - uses: nrwl/nx-set-shas@v3
+      - run: npm ci
+
+      - run: npx nx affected --target=docker-build --tag=europe-west1-docker.pkg.dev/advance-proton-376516/my-repo/backend:${{ github.sha }}
+     
+       
       - id: 'auth'
         name: 'Authenticate to Google Cloud'
         uses: 'google-github-actions/auth@v1'
@@ -58,7 +89,7 @@ jobs:
         run: |-
           gcloud run deploy backend \
           --region europe-west1 \
-          --image europe-west1-docker.pkg.dev/advance-proton-376516/my-repo/backend:${{ github.sha }}
+          --image europe-west1-docker.pkg.dev/advance-proton-376516/my-repo/backend:${{ github.sha }} \
           --platform=managed \
           --max-instances=1 \
           --allow-unauthenticated \
