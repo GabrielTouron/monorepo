@@ -15,7 +15,6 @@ export async function getServerSideProps() {
   const data = await res.json()
   const dbData = await dbRes.json()
 
-  const tata = "tata"
   return { props: { data, dbData } }
 }
 
