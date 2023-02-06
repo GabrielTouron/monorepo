@@ -10,7 +10,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    name: Nx build 
+    name: build 
     permissions:
       contents: 'read'
       actions: 'read'
@@ -45,7 +45,7 @@ jobs:
     runs-on: ubuntu-latest
     name: deploy
     needs: build
-    if: env.AFFECTED_PROJECT == "backend"
+    if: steps.env.AFFECTED_PROJECT == "backend"
     permissions:
       contents: 'read'
       actions: 'read'
