@@ -45,14 +45,14 @@ jobs:
     name: test
     needs: build
     steps:
-      - run: echo "${{ needs.build.outputs.affected_project }}"
+      - run: echo "${{ needs.build.outputs.affected-project }}"
 
 
   deploy:
     runs-on: ubuntu-latest
     name: deploy
     needs: build
-    if: ${{ needs.build.outputs.affected_project == 'backend' }}
+    if: ${{ needs.build.outputs.affected-project == 'backend' }}
     permissions:
       contents: 'read'
       actions: 'read'
