@@ -3,7 +3,7 @@ import styles from './index.module.css';
 
 // I want to call backend API from the backendAPI
 
-type Props = {
+export type Props = {
   data: { message: string }
   dbData: Post[]
 }
