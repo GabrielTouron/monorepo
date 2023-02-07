@@ -1,8 +1,22 @@
 import * as pulumi from '@pulumi/pulumi';
 import * as gcp from '@pulumi/gcp';
+import { cloudsql } from './pkgs/cloudsql';
+import { dbSecret } from './pkgs/secrets';
+import { github } from './pkgs/github';
 
 const project = gcp.config.project || 'my-project';
-const projectNumber = gcp.organizations.getProject({})
+// const projectNumber = gcp.organizations.getProject({})
+
+
+dbSecret.addSecretVersion(pulumi.interpolate`${cloudsql.userPassword}`);
+
+export const tata = pulumi.interpolate`${cloudsql.instanceCo}`;
+
+github.addActionSecret({
+  name: "INSTANCE_CO",
+  value: pulumi.interpolate`${cloudsql.instanceCo}`
+});
+
 // Enable artifact registry
 const enableAr = new gcp.projects.Service('service', {
   service: 'artifactregistry.googleapis.com',

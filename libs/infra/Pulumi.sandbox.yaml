@@ -1,2 +1,4 @@
 config:
   gcp:project: advance-proton-376516
+  github:token:
+    secure: AAABAOAEuZ8M6kbJebY/uFyP2aGCye/j4nk2sRvPdIvKLEVg9wRNdevnHMoU6B/ahuFd/WwrG4CnVvoDDTrd3RxQj95qh6v+

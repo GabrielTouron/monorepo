@@ -31,9 +31,8 @@ jobs:
       - run: npm ci
             
       - run: npx nx workspace-lint
-      # - run: npx nx format:check
       - run: npx nx affected --target=lint --parallel=3
-      - run: npx nx affected --target=test --parallel=3i --configuration=ci
+      - run: npx nx affected --target=test --parallel=3 --configuration=ci
       - run: npx nx affected --target=build --type=apps --parallel=3
       
       - id: affected
@@ -91,6 +90,7 @@ jobs:
           --image europe-west1-docker.pkg.dev/advance-proton-376516/my-repo/backend:${{ github.sha }} \
           --platform=managed \
           --max-instances=1 \
+          --add-cloudsql-instances=${{ secrets.INSTANCE_CO }} \
           --allow-unauthenticated \
           --quiet      
 
