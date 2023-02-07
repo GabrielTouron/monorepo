@@ -96,7 +96,7 @@ jobs:
           --image europe-west1-docker.pkg.dev/advance-proton-376516/my-repo/backend:${{ github.sha }} \
           --platform=managed \
           --service-account=${{ secrets.SERVICE_ACCOUNT }} \
-          --set-secrets=[DATABASE_URL=${{ steps.secrets.outputs.database-url }}] \
+          --set-env-vars DATABASE_URL=${{ steps.secrets.outputs.database-url }} \
           --max-instances=1 \
           --add-cloudsql-instances=${{ secrets.INSTANCE_CO }} \
           --allow-unauthenticated \

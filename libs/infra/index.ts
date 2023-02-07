@@ -132,6 +132,13 @@ new gcp.projects.IAMMember('sa-secret-admin', {
   member: pulumi.interpolate`serviceAccount:${sa.email}`,
 });
 
+new gcp.projects.IAMMember('fsfs-secret-admin', {
+  project,
+  role: 'roles/secretmanager.admin',
+  member: pulumi.interpolate`serviceAccount:${cloudRunServiceAccount.email}`,
+});
+
+
 // Sa need to be able to push images to the registry
 new gcp.artifactregistry.RepositoryIamMember('sa', {
   location: 'europe-west1',
