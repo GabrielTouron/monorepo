@@ -1,16 +1,17 @@
 import * as pulumi from '@pulumi/pulumi';
 import * as gcp from '@pulumi/gcp';
-import { cloudsql } from './pkgs/cloudsql';
+import { cloudSql } from './pkgs/cloudsql';
 import { dbSecret } from './pkgs/secrets';
 import { github } from './pkgs/github';
 
 const project = gcp.config.project || 'my-project';
 // const projectNumber = gcp.organizations.getProject({})
 
+const dbUrl = pulumi.interpolate`postgresql://${cloudSql.userName}:${cloudSql.userPassword}@${cloudSql.publicIp}:5432/${cloudSql.databaseName}?schema=public`
 
-dbSecret.addSecretVersion(pulumi.interpolate`${cloudsql.userPassword}`);
+dbSecret.addSecretVersion(dbUrl);
 
-export const tata = pulumi.interpolate`${cloudsql.instanceCo}`;
+export const tata = pulumi.interpolate`${cloudSql.instanceCo}`;
 
 const cloudRunServiceAccount = new gcp.serviceaccount.Account('cloud-run-sa', {
   accountId: 'cloud-run-sa',
@@ -23,13 +24,13 @@ new gcp.projects.IAMMember('cloud-run-sa-iam', {
   project,
   member: pulumi.interpolate`serviceAccount:${cloudRunServiceAccount.email}`,
   role: 'roles/cloudsql.admin',
-}, { dependsOn: [cloudsql, cloudRunServiceAccount] });
+}, { dependsOn: [cloudSql, cloudRunServiceAccount] });
 
 
 github 
   .addActionSecret({
     name: "INSTANCE_CO",
-    value: pulumi.interpolate`${cloudsql.instanceCo}`
+    value: pulumi.interpolate`${cloudSql.instanceCo}`
   })
   .addActionSecret({
     name: "SERVICE_ACCOUNT",
@@ -122,6 +123,12 @@ new gcp.serviceaccount.IAMBinding('sa-binding', {
 new gcp.projects.IAMMember('sa-editor', {
   project,
   role: 'roles/editor',
+  member: pulumi.interpolate`serviceAccount:${sa.email}`,
+});
+
+new gcp.projects.IAMMember('sa-secret-admin', {
+  project,
+  role: 'roles/secretmanager.admin',
   member: pulumi.interpolate`serviceAccount:${sa.email}`,
 });
 

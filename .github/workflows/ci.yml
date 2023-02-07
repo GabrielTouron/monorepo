@@ -83,6 +83,12 @@ jobs:
       - name: Build and Push Container
         run: docker push "europe-west1-docker.pkg.dev/advance-proton-376516/my-repo/backend:${{ github.sha }}"
 
+      - id: 'secrets'
+        uses: 'google-github-actions/get-secretmanager-secrets@v1'
+        with:
+          secrets: |-
+            database-url:advance-proton-376516/database-url
+
       - name: Deploy to Cloud Run
         run: |-
           gcloud run deploy backend \
@@ -90,6 +96,7 @@ jobs:
           --image europe-west1-docker.pkg.dev/advance-proton-376516/my-repo/backend:${{ github.sha }} \
           --platform=managed \
           --service-account=${{ secrets.SERVICE_ACCOUNT }} \
+          --set-secrets=[DATABASE_URL=${{ steps.secrets.outputs.database-url }}] \
           --max-instances=1 \
           --add-cloudsql-instances=${{ secrets.INSTANCE_CO }} \
           --allow-unauthenticated \
