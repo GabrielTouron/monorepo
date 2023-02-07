@@ -7,7 +7,8 @@ export interface GithubArgs {
 
 type VarArgs = {
   name: string;
-  value: pulumi.Output<string | undefined>
+  value: pulumi.Output<string | undefined>,
+  dependsOn?: pulumi.Resource[];
 };
 
 export class Github extends pulumi.ComponentResource {
@@ -20,12 +21,12 @@ export class Github extends pulumi.ComponentResource {
 
   }
 
-  public addActionSecret({ name, value }: VarArgs): this {
+  public addActionSecret({ name, value, dependsOn }: VarArgs): this {
     new github.ActionsSecret(name, {
       repository: this.repository,
       secretName: name,
       plaintextValue: pulumi.interpolate`${value}`,
-    }, { parent: this });
+    }, { parent: this, dependsOn });
 
     return this
   }

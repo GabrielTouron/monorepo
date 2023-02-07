@@ -12,10 +12,30 @@ dbSecret.addSecretVersion(pulumi.interpolate`${cloudsql.userPassword}`);
 
 export const tata = pulumi.interpolate`${cloudsql.instanceCo}`;
 
-github.addActionSecret({
-  name: "INSTANCE_CO",
-  value: pulumi.interpolate`${cloudsql.instanceCo}`
+const cloudRunServiceAccount = new gcp.serviceaccount.Account('cloud-run-sa', {
+  accountId: 'cloud-run-sa',
+  displayName: 'Cloud Run Service Account',
 });
+
+// give sql admin IAM role to cloud run service account
+
+new gcp.projects.IAMMember('cloud-run-sa-iam', {
+  project,
+  member: pulumi.interpolate`serviceAccount:${cloudRunServiceAccount.email}`,
+  role: 'roles/cloudsql.admin',
+}, { dependsOn: [cloudsql, cloudRunServiceAccount] });
+
+
+github 
+  .addActionSecret({
+    name: "INSTANCE_CO",
+    value: pulumi.interpolate`${cloudsql.instanceCo}`
+  })
+  .addActionSecret({
+    name: "SERVICE_ACCOUNT",
+    value: pulumi.interpolate`${cloudRunServiceAccount.email}`,
+    dependsOn: [cloudRunServiceAccount]
+  })
 
 // Enable artifact registry
 const enableAr = new gcp.projects.Service('service', {
@@ -127,5 +147,5 @@ new gcp.artifactregistry.RepositoryIamMember('sa', {
 
 
 
-  
+
 
