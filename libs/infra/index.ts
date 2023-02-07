@@ -7,9 +7,11 @@ import { github } from './pkgs/github';
 const project = gcp.config.project || 'my-project';
 // const projectNumber = gcp.organizations.getProject({})
 
-const dbUrl = pulumi.interpolate`postgresql://${cloudSql.userName}:${cloudSql.userPassword}@${cloudSql.publicIp}:5432/${cloudSql.databaseName}?schema=public`
+// const localDbUrl = pulumi.interpolate`postgresql://${cloudSql.userName}:${cloudSql.userPassword}@${cloudSql.publicIp}:5432/${cloudSql.databaseName}?schema=public`
 
-dbSecret.addSecretVersion(dbUrl);
+const cloudSqlDbUrl = pulumi.interpolate`postgresql://${cloudSql.userName}:${cloudSql.userPassword}@localhost/${cloudSql.databaseName}?host=/cloudsql/${cloudSql.instanceCo}`
+
+dbSecret.addSecretVersion(cloudSqlDbUrl);
 
 export const tata = pulumi.interpolate`${cloudSql.instanceCo}`;
 
