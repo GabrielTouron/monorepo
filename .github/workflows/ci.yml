@@ -10,7 +10,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    name: build 
+    name: build
     outputs:
       affected-project: ${{ steps.affected.outputs.affected_project }}
     permissions:
@@ -29,15 +29,15 @@ jobs:
 
       - uses: nrwl/nx-set-shas@v3
       - run: npm ci
-            
+
       - run: npx nx workspace-lint
       - run: npx nx affected --target=lint --parallel=3
       - run: npx nx affected --target=test --parallel=3 --configuration=ci
       - run: npx nx affected --target=build --type=apps --parallel=3
-      
+
       - id: affected
         name: Check if dockerizable backend is affected
-        run: echo affected_project=$(npx nx print-affected --target=docker-build --select=projects --exclude=client) >> $GITHUB_OUTPUT  
+        run: echo affected_project=$(npx nx print-affected --target=docker-build --select=projects --exclude=client) >> $GITHUB_OUTPUT
 
   deploy:
     runs-on: ubuntu-latest
@@ -62,8 +62,8 @@ jobs:
       - run: npm ci
 
       - run: npx nx affected --target=docker-build --tag=europe-west1-docker.pkg.dev/advance-proton-376516/my-repo/backend:${{ github.sha }}
-     
-       
+
+
       - id: 'auth'
         name: 'Authenticate to Google Cloud'
         uses: 'google-github-actions/auth@v1'
@@ -96,10 +96,10 @@ jobs:
           --image europe-west1-docker.pkg.dev/advance-proton-376516/my-repo/backend:${{ github.sha }} \
           --platform=managed \
           --service-account=${{ secrets.SERVICE_ACCOUNT }} \
-          --update-secrets=DATABASE_URL=${{ steps.secrets.outputs.database-url }} \
+          --set-secrets=DATABASE_URL=database-url:latest\
           --max-instances=1 \
           --add-cloudsql-instances=${{ secrets.INSTANCE_CO }} \
           --allow-unauthenticated \
-          --quiet      
+          --quiet
 
 
