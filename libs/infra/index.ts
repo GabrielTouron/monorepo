@@ -7,9 +7,9 @@ import { github } from './pkgs/github';
 const project = gcp.config.project || 'my-project';
 // const projectNumber = gcp.organizations.getProject({})
 
-// const localDbUrl = pulumi.interpolate`postgresql://${cloudSql.userName}:${cloudSql.userPassword}@${cloudSql.publicIp}:5432/${cloudSql.databaseName}?schema=public`
+export const localDbUrl = pulumi.interpolate`postgresql://${cloudSql.userName}:${cloudSql.userPassword}@${cloudSql.publicIp}:5432/${cloudSql.databaseName}?schema=public`
 
-const cloudSqlDbUrl = pulumi.interpolate`postgresql://${cloudSql.userName}:${cloudSql.userPassword}@localhost/${cloudSql.databaseName}?host=/cloudsql/${cloudSql.instanceCo}`
+export const cloudSqlDbUrl = pulumi.interpolate`postgresql://${cloudSql.userName}:${cloudSql.userPassword}@localhost/${cloudSql.databaseName}?host=/cloudsql/${cloudSql.instanceCo}`
 
 dbSecret.addSecretVersion(cloudSqlDbUrl);
 
@@ -29,7 +29,7 @@ new gcp.projects.IAMMember('cloud-run-sa-iam', {
 }, { dependsOn: [cloudSql, cloudRunServiceAccount] });
 
 
-github 
+github
   .addActionSecret({
     name: "INSTANCE_CO",
     value: pulumi.interpolate`${cloudSql.instanceCo}`

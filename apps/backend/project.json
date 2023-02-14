@@ -1,7 +1,7 @@
 {
   "name": "backend",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/backend/src",
+  "sourceRoot": "apps/backend/",
   "projectType": "application",
   "targets": {
     "build": {
@@ -12,7 +12,10 @@
         "format": ["cjs"],
         "main": "apps/backend/src/main.ts",
         "tsConfig": "apps/backend/tsconfig.app.json",
-        "assets": ["apps/backend/src/assets"]
+        "assets": [
+          { "input": "apps/backend/src/assets", "glob": "**/*", "output": "." },
+          { "input": "libs/db/prisma", "glob": "schema.prisma", "output": "." }
+        ]
       }
     },
     "serve": {
@@ -51,7 +54,7 @@
       "dependsOn": ["build"],
       "executor": "nx:run-commands",
       "options": {
-        "commands": ["docker build -f apps/backend/Dockerfile ."]
+        "commands": ["docker build -f apps/backend/Dockerfile --no-cache ."]
       }
     }
   },

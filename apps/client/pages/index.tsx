@@ -1,11 +1,9 @@
-import { Post } from '@prisma/client';
 import styles from './index.module.css';
-
-// I want to call backend API from the backendAPI
+import { Post } from '@monorepo/db';
 
 export type Props = {
   data: { message: string }
-  dbData: Post[]
+  dbData: Post
 }
 
 export async function getServerSideProps() {

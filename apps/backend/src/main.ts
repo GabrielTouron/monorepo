@@ -1,5 +1,5 @@
 import fastify from 'fastify';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@monorepo/db'
 
 const prisma = new PrismaClient();
 

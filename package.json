@@ -6,8 +6,9 @@
     "nx": "nx",
     "start:client": "nx serve client",
     "build:client": "nx build client --prod",
-    "start:backend": "nx serve backend",
+    "start:backend": "nx serve backend --prod",
     "build:backend": "nx build backend --prod",
+    "docker:backend": "nx run backend:docker-build",
     "start:dev": "nx run-many --parallel --target=serve --projects=client,backend",
     "migrate:dev": "prisma migrate dev",
     "db:pull": "prisma db pull",
@@ -78,7 +79,7 @@
     "typescript": "~4.8.2"
   },
   "prisma": {
-    "schema": "apps/backend/prisma/schema.prisma",
-    "env": "apps/backend/.env"
+    "schema": "libs/db/prisma/schema.prisma",
+    "env": "libs/db/prisma/.env"
   }
 }
