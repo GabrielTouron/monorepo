@@ -60,6 +60,7 @@ jobs:
 
       - uses: nrwl/nx-set-shas@v3
       - run: npm ci
+      - run: npx prisma generate
 
       - run: npx nx affected --target=docker-build --tag=europe-west1-docker.pkg.dev/advance-proton-376516/my-repo/backend:${{ github.sha }}
 
